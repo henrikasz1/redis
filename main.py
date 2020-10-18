@@ -40,10 +40,10 @@ def transaction():
 	first_acc = input('Enter the account from which will be paid ')
 	second_acc = input('Enter the account which will receive money ')
 	amount = int(input('Enter the amount of money which will be transferred '))
-	# inspired by <3 https://fabioconcina.github.io/blog/transactions-in-redis-with-python/
+	# insired by <3 https://fabioconcina.github.io/blog/transactions-in-redis-with-python/
 	p = client.pipeline()
 	p.watch(first_acc, second_acc)
-	if amount <= int(client.hget(first_acc, 'balance')): # or ('credit' in client.hget(first_acc, 'type')):
+	if amount <= int(client.hget(first_acc, 'balance')) or 'credit' in str(client.hget(first_acc, 'type')):
 		consists = p.exists(first_acc, second_acc)
 		if consists:
 			p.multi()
